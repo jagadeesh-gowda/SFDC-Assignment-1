@@ -1,0 +1,10 @@
+// Write a trigger on Opportunity to alert a error message if Opportunity Amount is less than 5000.  
+
+trigger OpportunityLessThan5k on Opportunity (before insert, before update) {
+    
+    for(Opportunity op: Trigger.New){
+        if(op.Amount<5000 || op.Amount==null){
+            op.addError('Opportunity Amount Must be Greater than 5000');
+        }
+    }
+}

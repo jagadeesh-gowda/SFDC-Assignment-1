@@ -1,0 +1,21 @@
+// Create 1 new account and opportunity and associate with each other through apex.  
+
+public class AccountWithOpportunity {
+    
+    public void createAccWithOpp(String Name){
+        Account a= new Account();
+        a.Name=Name;
+        a.Type='Prospect';
+        insert a;
+        
+        Opportunity op =new Opportunity();
+        op.Name=a.Name+' opp';
+        op.AccountId=a.id;
+        op.CloseDate=Date.Today()+10;
+        op.StageName='Prospecting';
+        op.Type='New Customer';
+        op.LeadSource='Web';
+        op.Amount=600;
+        insert op;   
+    }   
+}

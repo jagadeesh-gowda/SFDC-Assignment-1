@@ -1,0 +1,54 @@
+// Create New Price book ‘India Pricebook’ and 10 Products with Prices in the Pricebook. 
+
+public class ProductandPriceBookofIndia {
+    
+    public void createPriceBook(){
+        //Creating Pricebook
+        Pricebook2 pb= new Pricebook2();
+        pb.Name='India Price Book';
+        insert pb;
+        
+        //Creating Products (10 products)
+        List<Product2> prodList= new List<Product2>();
+        
+        for(Integer i=1;i<=10;i++){
+            Product2 p=new Product2();
+            p.Name='Product '+i;
+            p.IsActive=True;
+            p.ProductCode='PRO-CODE-'+i;
+            prodList.add(p);
+        }
+        insert prodList;
+        
+        prodList=[Select id, Name from Product2 where CreatedDate=Today];
+        
+        //Fetching ID of Standard Price book
+        Pricebook2 stdPB = [select id from Pricebook2 where isStandard=true];
+        
+        //Creating Standard Price book Entry for all the 10 Products 
+        List<PricebookEntry> StandardPriceBookEntryList=new List<PricebookEntry>();
+        for(Product2 p: prodList){
+            PricebookEntry stdPBE=new PricebookEntry();
+            stdPBE.IsActive=True;
+            stdPBE.Pricebook2Id=stdPB.Id;
+            stdPBE.UnitPrice=99999;
+            stdPBE.Product2Id=p.id;
+            StandardPriceBookEntryList.add(stdPBE);
+        }
+        
+        insert StandardPriceBookEntryList;
+        
+        //Addind Custom Pricebook Entries to he price book
+        List<PricebookEntry> pricebookEntryList=new List<PricebookEntry>();
+        for(Product2 p: prodList){
+            PricebookEntry pbe=new PricebookEntry();
+            pbe.IsActive=True;
+            pbe.Pricebook2Id=pb.id;
+            pbe.UnitPrice=240;
+            pbe.Product2Id=p.id;
+            pbe.UseStandardPrice=False;
+            pricebookEntryList.add(pbe);
+        }
+        insert pricebookEntryList;
+    }
+}

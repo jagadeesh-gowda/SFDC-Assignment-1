@@ -1,0 +1,45 @@
+/* Create a field Opportunity amount on Account object 
+and write a trigger on Opportunity to populate the total sum of all opportunity Amount 
+on Account Object Opportunity amount field. */
+
+trigger OppAmountUpdateonAcc on Opportunity (after insert, after update, after delete) {
+    
+    // List<Id> AssociatedaccId= new List<Id>(); List will allow duplicates
+    Set<Id> AssociatedaccId= new Set<Id>();//Stores id of Accounts associated with Opportunity
+    List<Opportunity> oppList= new List<Opportunity>();
+    
+    //if the operation is insertion or updation of Opportunity
+    if(Trigger.isInsert || Trigger.isUpdate){
+        for(Opportunity opp: Trigger.New){
+            if(opp.AccountId!=null){
+                AssociatedaccId.add(opp.AccountId);//get Account id associated with inserted or updated Opportunity
+            }
+        }
+    }
+    //if the operation is deletion of Opportunity
+    if(Trigger.isDelete){
+        for(Opportunity opp: Trigger.Old){
+            if(opp.AccountId!=null){
+                AssociatedaccId.add(opp.AccountId);//get Account id associated with deleted Opportunity
+            }
+        }
+    }
+    //get all the Opportunities of an Associated Account
+    oppList=[Select id, Amount from Opportunity where AccountId IN: AssociatedaccId];
+    
+    //get id and Opportunity_Amount of all Accounts associated with an Opportunity
+    List<Account> accList=[Select id, Opportunity_Amount__c from Account where Id IN: AssociatedaccId];
+    
+    Double sum=0;//to calculate sum of Amounts of all Associated Opportunities
+    
+    //For each Opportunity of an Acount calculate Sum of Opportunity Amount
+    for(Account a: accList){
+        for(Opportunity opp: oppList){
+            if(opp.Amount!=null){
+                sum=sum+opp.Amount;
+            }
+        }
+        a.Opportunity_Amount__c=sum;// Assign sum of All Opportunity Amount to Opportunity_Amount__c field of Account Object
+    }
+    update accList;// Update the Account List
+}

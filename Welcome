@@ -1,0 +1,7 @@
+//Create Apex class with a function to print 'Welcome to Salesforce'
+
+public class Welcome {
+    public void greeting(){
+        System.debug('Welcome to Salesforce');
+    }
+}

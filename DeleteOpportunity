@@ -1,0 +1,10 @@
+// Delete all Opportunity belonging to Opportunity Name FIELD having ‘A’ in them. 
+
+public class DeleteOpportunity {
+    
+    public void DeleteOpp(){
+        List<Opportunity> op= [SELECT Id, Name FROM Opportunity where Name Like '%A%'];
+        System.debug(op.size()+' Opportunities will be deleted');
+        delete op;
+    }
+}

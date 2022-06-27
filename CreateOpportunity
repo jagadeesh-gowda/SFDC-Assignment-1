@@ -1,0 +1,20 @@
+// Create 20 new Opportunity Records in salesforce with at least 5 fields filled. And every Opportunity Name should be unique. 
+
+public class OpportunityCreation {
+    
+    public void createOpportunity(){
+        List<Opportunity> oppList=new List<Opportunity>();
+        for(Integer i=1;i<=20;i++){
+            Opportunity op=new Opportunity();
+            op.Name='Test Opportunity '+i;
+            op.CloseDate=Date.Today()+10;
+            op.StageName='Prospecting';
+            op.Type='New Customer';
+            op.LeadSource='Web';
+            op.Amount=60000;
+            oppList.add(op);
+        }
+        insert oppList;
+    }
+
+}
